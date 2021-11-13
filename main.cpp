@@ -30,7 +30,7 @@ static bool quit = false;
 #define HEIGHT 30
 #define LED_COUNT WIDTH * HEIGHT
 
-#define RASTER_SIZE 40
+#define RASTER_SIZE 48
 #define WINDOW_WIDTH WIDTH * RASTER_SIZE
 #define WINDOW_HEIGHT HEIGHT * RASTER_SIZE
 
@@ -68,7 +68,7 @@ int main()
     }
 
     // Create a SDL Window
-	SDL_Window *win = SDL_CreateWindow("Hello World!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+	SDL_Window *win = SDL_CreateWindow("Window Neopixel Sinulator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
     if (win == nullptr){
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
@@ -76,7 +76,7 @@ int main()
     }
 
     // Create a SDL Renderer
-	ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
+	ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (ren == nullptr){
         SDL_DestroyWindow(win);
         std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
@@ -103,9 +103,11 @@ int main()
                 quit = true;
             }
             //If user clicks the mouse
+			/*
             if (e.type == SDL_MOUSEBUTTONDOWN){
                 quit = true;
             }
+			*/
         }
         SDL_Delay(1);
     }

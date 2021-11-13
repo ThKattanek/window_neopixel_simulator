@@ -21,7 +21,6 @@
 
 using namespace std;
 
-static SDL_Thread *thread1;
 static SDL_Renderer *ren;
 
 static bool quit = false;
@@ -30,7 +29,7 @@ static bool quit = false;
 #define HEIGHT 30
 #define LED_COUNT WIDTH * HEIGHT
 
-#define RASTER_SIZE 48
+#define RASTER_SIZE 40
 #define WINDOW_WIDTH WIDTH * RASTER_SIZE
 #define WINDOW_HEIGHT HEIGHT * RASTER_SIZE
 
@@ -39,24 +38,6 @@ uint32_t matrix[LED_COUNT];
 void matrix_init();
 void matrix_render();
 void matrix_to_leds();
-
-static int RenderThread(void *userdata);
-static int RenderThread(void*)
-{
-    while(!quit)
-    {
-		matrix_render();
-		matrix_to_leds();
-
-        //Update the screen
-        SDL_RenderPresent(ren);
-
-		//cout << "TEST" << endl;
-
-		SDL_Delay(1000/50);
-    }
-    return 0;
-}
 
 #undef main
 int main()
@@ -87,7 +68,7 @@ int main()
 	matrix_init();
 
     // Create and running the Render Thread
-    thread1 = SDL_CreateThread(RenderThread, "RenderThread", nullptr);
+	//thread1 = SDL_CreateThread(RenderThread, "RenderThread", nullptr);
 
     // main loop with event handling
     SDL_Event e;
@@ -109,7 +90,16 @@ int main()
             }
 			*/
         }
-        SDL_Delay(1);
+
+		matrix_render();
+		matrix_to_leds();
+
+		//Update the screen
+		SDL_RenderPresent(ren);
+
+		//cout << "TEST" << endl;
+
+		SDL_Delay(1000/50);
     }
 
     // Destroys all created objects
@@ -195,11 +185,11 @@ void matrix_to_leds()
 				y_center = (((HEIGHT - led_y)) * RASTER_SIZE) + RASTER_SIZE / 2;
 			}
 
-			float br = 1.0f;
-			for(int i=0; i<10; i++)
+			float br = 0.0f;
+			for(int i=14; i>=0; i--)
 			{
-				circleColor(ren,x_center, y_center, i, 0xff000000 | (uint8_t)((float)b * br ) << 16 | (uint8_t)((float)g * br ) << 8 | (uint8_t)((float)r * br ));
-				br -= 0.05;
+				filledCircleColor(ren,x_center, y_center, i, 0xff000000 | (uint8_t)((float)b * br ) << 16 | (uint8_t)((float)g * br ) << 8 | (uint8_t)((float)r * br ));
+				br += 0.070;
 			}
 
 			m_index++;

@@ -19,6 +19,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+#include "./plasma.h"
+
 using namespace std;
 
 static SDL_Renderer *ren;
@@ -29,15 +31,16 @@ static bool quit = false;
 #define HEIGHT 30
 #define LED_COUNT WIDTH * HEIGHT
 
-#define RASTER_SIZE 40
-#define WINDOW_WIDTH WIDTH * RASTER_SIZE
-#define WINDOW_HEIGHT HEIGHT * RASTER_SIZE
+#define RASTER_SIZE_XW 52
+#define RASTER_SIZE_YW 40
+#define WINDOW_WIDTH WIDTH * RASTER_SIZE_XW
+#define WINDOW_HEIGHT HEIGHT * RASTER_SIZE_YW
 
+uint32_t buffer[LED_COUNT];
 uint32_t matrix[LED_COUNT];
 
-void matrix_init();
-void matrix_render();
 void matrix_to_leds();
+void buffer_to_matrix();
 
 #undef main
 int main()
@@ -65,10 +68,11 @@ int main()
         return 1;
     }
 
-	matrix_init();
+	// Init Effects
 
-    // Create and running the Render Thread
-	//thread1 = SDL_CreateThread(RenderThread, "RenderThread", nullptr);
+	Plasma plasma(WIDTH, HEIGHT, buffer);
+	plasma.Init();
+
 
     // main loop with event handling
     SDL_Event e;
@@ -91,14 +95,13 @@ int main()
 			*/
         }
 
-		matrix_render();
+		// Render Effects
+		plasma.Render();
+		buffer_to_matrix();
 		matrix_to_leds();
 
 		//Update the screen
 		SDL_RenderPresent(ren);
-
-		//cout << "TEST" << endl;
-
 		SDL_Delay(1000/50);
     }
 
@@ -111,48 +114,6 @@ int main()
 
     // Bye
     return 0;
-}
-
-void matrix_init()
-{
-	int c = 0;
-	int b = 0;
-	for(int i=0; i<LED_COUNT; i++)
-	{
-		switch(b)
-		{
-		case 0:
-			matrix[i] = 0x0000ff00;
-			break;
-		case 1:
-			matrix[i] = 0x000000ff;
-			break;
-		case 2:
-			matrix[i] = 0x00ff0000;
-			break;
-		default:
-			break;
-		}
-
-		c++;
-		if(c == 5)
-		{
-			b++;
-			if(b == 3) b = 0;
-			c = 0;
-		}
-	}
-}
-
-void matrix_render()
-{
-	uint32_t tmp = matrix[0];
-
-	for(int i=0; i<LED_COUNT; i++)
-	{
-		matrix[i] = matrix[i+1];
-	}
-	matrix[LED_COUNT-1] = tmp;
 }
 
 void matrix_to_leds()
@@ -176,24 +137,58 @@ void matrix_to_leds()
 
 			if(!(flip & 1))
 			{
-				x_center = ((led_x - 1) * RASTER_SIZE) + RASTER_SIZE / 2;
-				y_center = ((led_y - 1) * RASTER_SIZE) + RASTER_SIZE / 2;
+				x_center = ((led_x - 1) * RASTER_SIZE_XW) + RASTER_SIZE_XW / 2;
+				y_center = ((led_y - 1) * RASTER_SIZE_YW) + RASTER_SIZE_YW / 2;
 			}
 			else
 			{
-				x_center = ((led_x - 1) * RASTER_SIZE) + RASTER_SIZE / 2;
-				y_center = (((HEIGHT - led_y)) * RASTER_SIZE) + RASTER_SIZE / 2;
+				x_center = ((led_x - 1) * RASTER_SIZE_XW) + RASTER_SIZE_XW / 2;
+				y_center = (((HEIGHT - led_y)) * RASTER_SIZE_YW) + RASTER_SIZE_YW / 2;
 			}
 
-			float br = 0.0f;
-			for(int i=14; i>=0; i--)
+			float br = 1.0f;
+			for(int i=10; i>=0; i--)
 			{
 				filledCircleColor(ren,x_center, y_center, i, 0xff000000 | (uint8_t)((float)b * br ) << 16 | (uint8_t)((float)g * br ) << 8 | (uint8_t)((float)r * br ));
-				br += 0.070;
+				//br += 0.08;
 			}
 
 			m_index++;
 		}
 		flip++;
+	}
+}
+
+void buffer_to_matrix()
+{
+	int x = WIDTH-1;
+	int y = HEIGHT-1;
+
+	bool y_direction = false;
+
+	for(int i=0; i<LED_COUNT; i++)
+	{
+		matrix[i] = buffer[y*WIDTH+x];
+
+		if(y_direction)
+		{
+			y++;
+			if(y>=HEIGHT)
+			{
+				y=HEIGHT-1;
+				x--;
+				y_direction = false;
+			}
+		}
+		else
+		{
+			y--;
+			if(y<0)
+			{
+				y=0;
+				x--;
+				y_direction = true;
+			}
+		}
 	}
 }

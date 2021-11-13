@@ -6,5 +6,9 @@ CONFIG -= qt
 TARGET = "window_neopixel_simulator"
 
 SOURCES += \
-        main.cpp
+        main.cpp \
+        plasma.cpp
 LIBS += -lSDL2 -lSDL2main -lSDL2_gfx
+
+HEADERS += \
+	plasma.h

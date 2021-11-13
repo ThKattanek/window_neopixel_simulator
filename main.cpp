@@ -8,7 +8,7 @@
 // Dieser Sourcecode ist Copyright geschützt!   //
 // Geistiges Eigentum von Th.Kattanek           //
 //                                              //
-// Letzte Änderung am 06.09.2019                //
+// Letzte Änderung am 13.11.2021                //
 //                                              //
 //                                              //
 //////////////////////////////////////////////////
@@ -23,7 +23,6 @@ using namespace std;
 
 static SDL_Thread *thread1;
 static SDL_Renderer *ren;
-static SDL_Texture *tex;
 
 static bool quit = false;
 
@@ -31,7 +30,7 @@ static bool quit = false;
 #define HEIGHT 30
 #define LED_COUNT WIDTH * HEIGHT
 
-#define RASTER_SIZE 48
+#define RASTER_SIZE 40
 #define WINDOW_WIDTH WIDTH * RASTER_SIZE
 #define WINDOW_HEIGHT HEIGHT * RASTER_SIZE
 
@@ -51,6 +50,8 @@ static int RenderThread(void*)
 
         //Update the screen
         SDL_RenderPresent(ren);
+
+		//cout << "TEST" << endl;
 
 		SDL_Delay(1000/50);
     }
@@ -75,31 +76,10 @@ int main()
     }
 
     // Create a SDL Renderer
-    ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
     if (ren == nullptr){
         SDL_DestroyWindow(win);
         std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        return 1;
-    }
-
-    // Create a SDL Surface with load the test.bmp image
-    SDL_Surface *bmp = SDL_LoadBMP("test.bmp");
-    if (bmp == nullptr){
-        SDL_DestroyRenderer(ren);
-        SDL_DestroyWindow(win);
-        std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        return 1;
-    }
-
-    // Create a Textur from Surfacee
-    tex = SDL_CreateTextureFromSurface(ren, bmp);
-    SDL_FreeSurface(bmp);
-    if (tex == nullptr){
-        SDL_DestroyRenderer(ren);
-        SDL_DestroyWindow(win);
-        std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return 1;
     }
@@ -131,7 +111,6 @@ int main()
     }
 
     // Destroys all created objects
-    SDL_DestroyTexture(tex);
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(win);
 

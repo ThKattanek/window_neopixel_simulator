@@ -31,7 +31,7 @@ static bool quit = false;
 #define HEIGHT 30
 #define LED_COUNT WIDTH * HEIGHT
 
-#define RASTER_SIZE_XW 52
+#define RASTER_SIZE_XW 50
 #define RASTER_SIZE_YW 40
 #define WINDOW_WIDTH WIDTH * RASTER_SIZE_XW
 #define WINDOW_HEIGHT HEIGHT * RASTER_SIZE_YW
@@ -146,11 +146,11 @@ void matrix_to_leds()
 				y_center = (((HEIGHT - led_y)) * RASTER_SIZE_YW) + RASTER_SIZE_YW / 2;
 			}
 
-			float br = 1.0f;
-			for(int i=10; i>=0; i--)
+			float br = 0.0f;
+			for(int i=25; i>=0; i--)
 			{
 				filledCircleColor(ren,x_center, y_center, i, 0xff000000 | (uint8_t)((float)b * br ) << 16 | (uint8_t)((float)g * br ) << 8 | (uint8_t)((float)r * br ));
-				//br += 0.08;
+				br += 0.04;
 			}
 
 			m_index++;

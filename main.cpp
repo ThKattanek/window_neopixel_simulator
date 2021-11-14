@@ -20,6 +20,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 #include "./plasma.h"
+#include "./cometrain.h"
 
 using namespace std;
 
@@ -39,6 +40,7 @@ static bool quit = false;
 uint32_t buffer[LED_COUNT];
 uint32_t matrix[LED_COUNT];
 
+void buffer_clear();
 void matrix_to_leds();
 void buffer_to_matrix();
 
@@ -73,6 +75,9 @@ int main()
 	Plasma plasma(WIDTH, HEIGHT, buffer);
 	plasma.Init();
 
+	Cometrain cometrain(WIDTH, HEIGHT, buffer);
+	cometrain.Init();
+
 
     // main loop with event handling
     SDL_Event e;
@@ -95,8 +100,13 @@ int main()
 			*/
         }
 
+		buffer_clear();
+
 		// Render Effects
-		plasma.Render();
+
+		//plasma.Render();
+		cometrain.Render();
+
 		buffer_to_matrix();
 		matrix_to_leds();
 
@@ -114,6 +124,12 @@ int main()
 
     // Bye
     return 0;
+}
+
+void buffer_clear()
+{
+	for(int i=0; i<LED_COUNT; i++)
+		buffer[i] = 0x00000000;
 }
 
 void matrix_to_leds()
@@ -147,10 +163,10 @@ void matrix_to_leds()
 			}
 
 			float br = 0.0f;
-			for(int i=25; i>=0; i--)
+			for(int i=20; i>=0; i--)
 			{
 				filledCircleColor(ren,x_center, y_center, i, 0xff000000 | (uint8_t)((float)b * br ) << 16 | (uint8_t)((float)g * br ) << 8 | (uint8_t)((float)r * br ));
-				br += 0.04;
+				br += 0.05;
 			}
 
 			m_index++;

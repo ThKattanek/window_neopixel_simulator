@@ -81,7 +81,7 @@ int main()
 
 	PictureShow pictureshow(WIDTH, HEIGHT, buffer);
 
-	if(!pictureshow.LoadPNG("/home/thorsten/test.png"))
+	if(!pictureshow.LoadPNG("/home/thorsten/baum2.png"))
 		cout << "Picture not open." << endl;
 
     // main loop with event handling

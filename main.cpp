@@ -8,7 +8,7 @@
 // Dieser Sourcecode ist Copyright geschützt!   //
 // Geistiges Eigentum von Th.Kattanek           //
 //                                              //
-// Letzte Änderung am 13.11.2021                //
+// Letzte Änderung am 16.11.2021                //
 //                                              //
 //                                              //
 //////////////////////////////////////////////////
@@ -32,6 +32,8 @@ static bool quit = false;
 #define WIDTH 25
 #define HEIGHT 30
 #define LED_COUNT WIDTH * HEIGHT
+#define EFFECT_TIME	4	// for 10sek
+#define FPS	50			// 50 Frame per second
 
 #define RASTER_SIZE_XW 50
 #define RASTER_SIZE_YW 40
@@ -40,6 +42,11 @@ static bool quit = false;
 
 uint32_t buffer[LED_COUNT];
 uint32_t matrix[LED_COUNT];
+
+enum effects{PLASMA, COMETRAIN, PICTURESHOW, EFFECT_COUNT};
+
+int current_effect = PLASMA;
+int effect_time_counter = EFFECT_TIME * FPS;
 
 void buffer_clear();
 void matrix_to_leds();
@@ -107,11 +114,31 @@ int main()
 
 		buffer_clear();
 
-		// Render Effects
+		// render effects
 
-		//plasma.Render();
-		//cometrain.Render();
-		pictureshow.Render();
+		switch(current_effect)
+		{
+		case PLASMA:
+			plasma.Render();
+			break;
+
+		case COMETRAIN:
+			cometrain.Render();
+			break;
+
+		case PICTURESHOW:
+			pictureshow.Render();
+			break;
+		}
+
+		effect_time_counter--;
+		if(effect_time_counter == 0)
+		{
+			effect_time_counter = EFFECT_TIME * FPS;
+			current_effect++;
+			if(current_effect == EFFECT_COUNT)
+				current_effect = PLASMA;
+		}
 
 		buffer_to_matrix();
 		matrix_to_leds();

@@ -21,6 +21,7 @@
 
 #include "./plasma.h"
 #include "./cometrain.h"
+#include "./pictureshow.h"
 
 using namespace std;
 
@@ -78,6 +79,10 @@ int main()
 	Cometrain cometrain(WIDTH, HEIGHT, buffer);
 	cometrain.Init();
 
+	PictureShow pictureshow(WIDTH, HEIGHT, buffer);
+
+	if(!pictureshow.LoadPNG("/home/thorsten/test.png"))
+		cout << "Picture not open." << endl;
 
     // main loop with event handling
     SDL_Event e;
@@ -105,7 +110,8 @@ int main()
 		// Render Effects
 
 		//plasma.Render();
-		cometrain.Render();
+		//cometrain.Render();
+		pictureshow.Render();
 
 		buffer_to_matrix();
 		matrix_to_leds();

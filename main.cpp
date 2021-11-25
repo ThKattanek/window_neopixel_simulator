@@ -22,6 +22,7 @@
 #include "./plasma.h"
 #include "./cometrain.h"
 #include "./pictureshow.h"
+#include "./fire.h"
 
 using namespace std;
 
@@ -32,7 +33,7 @@ static bool quit = false;
 #define WIDTH 25
 #define HEIGHT 30
 #define LED_COUNT WIDTH * HEIGHT
-#define EFFECT_TIME	4	// for 10sek
+#define EFFECT_TIME	10	// for 10sek
 #define FPS	50			// 50 Frame per second
 
 #define RASTER_SIZE_XW 50
@@ -43,9 +44,9 @@ static bool quit = false;
 uint32_t buffer[LED_COUNT];
 uint32_t matrix[LED_COUNT];
 
-enum effects{PLASMA, COMETRAIN, PICTURESHOW, EFFECT_COUNT};
+enum effects{FIRE, PLASMA, COMETRAIN, PICTURESHOW, EFFECT_COUNT};
 
-int current_effect = PLASMA;
+int current_effect = FIRE;
 int effect_time_counter = EFFECT_TIME * FPS;
 
 void buffer_clear();
@@ -80,6 +81,9 @@ int main()
 
 	// Init Effects
 
+	Fire fire(WIDTH, HEIGHT, buffer);
+	fire.Init();
+
 	Plasma plasma(WIDTH, HEIGHT, buffer);
 	plasma.Init();
 
@@ -88,7 +92,7 @@ int main()
 
 	PictureShow pictureshow(WIDTH, HEIGHT, buffer);
 
-	if(!pictureshow.LoadPNG("/home/thorsten/baum2.png"))
+	if(!pictureshow.LoadPNG("/home/thorsten/baum3.png"))
 		cout << "Picture not open." << endl;
 
     // main loop with event handling
@@ -118,6 +122,9 @@ int main()
 
 		switch(current_effect)
 		{
+		case FIRE:
+			fire.Render();
+			break;
 		case PLASMA:
 			plasma.Render();
 			break;
@@ -137,7 +144,7 @@ int main()
 			effect_time_counter = EFFECT_TIME * FPS;
 			current_effect++;
 			if(current_effect == EFFECT_COUNT)
-				current_effect = PLASMA;
+				current_effect = FIRE;
 		}
 
 		buffer_to_matrix();

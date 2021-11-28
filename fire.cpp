@@ -25,47 +25,47 @@ void Fire::Init()
 		for (int i = 0; i < 32; ++i)
 		{
 			/* black to blue, 32 values*/
-			colors[i] = (i << 1) << 8; // blue
+			colors[i] = (i << 1) << 16; // blue
 
 			/* blue to red, 32 values*/
-			colors[i + 32] = (i << 3) << 24; // red
-			colors[i + 32] |=  (64 - (i << 1)) << 8; // blue
+			colors[i + 32] = (i << 3); // red
+			colors[i + 32] |=  (64 - (i << 1)) << 16; // blue
 
 			/*red to yellow, 32 values*/
-			colors[i + 64] = 255 << 24;	// red
-			colors[i + 64] |= (i << 3) << 16; // green
+			colors[i + 64] = 255;	// red
+			colors[i + 64] |= (i << 3) << 8; // green
 
 			/* yellow to white, 162 */
-			colors[i + 96] = 255 << 24;	// red
-			colors[i + 96] |= 255 << 16; // green
-			colors[i + 96] |= (i << 2) << 8; // blue
+			colors[i + 96] = 255;	// red
+			colors[i + 96] |= 255 << 8; // green
+			colors[i + 96] |= (i << 2) << 16; // blue
 
-			colors[i + 128] = 255 << 24; // red
-			colors[i + 128] |= 255 << 16; // green
-			colors[i + 128] |= (64 + (i << 2)) << 8; // blue
+			colors[i + 128] = 255 ; // red
+			colors[i + 128] |= 255 << 8; // green
+			colors[i + 128] |= (64 + (i << 2)) << 16; // blue
 
-			colors[i + 160] = 255 << 24; // red
-			colors[i + 160] |= 255 << 16; // green
-			colors[i + 160] |= (128 + (i << 2)) << 8; // blue
+			colors[i + 160] = 255 ; // red
+			colors[i + 160] |= 255 << 8; // green
+			colors[i + 160] |= (128 + (i << 2)) << 16; // blue
 
-			colors[i + 192] = 255 << 24; // red
-			colors[i + 192] |= 255 << 16; // green
-			colors[i + 192] |= (192 + i) << 8; // blue
+			colors[i + 192] = 255 ; // red
+			colors[i + 192] |= 255 << 8; // green
+			colors[i + 192] |= (192 + i) << 16; // blue
 
-			colors[i + 224] = 255 << 24; // red
-			colors[i + 224] |= 255 << 16; // green
-			colors[i + 224] |= (224 + i) << 8; // blue
+			colors[i + 224] = 255 ; // red
+			colors[i + 224] |= 255 << 8; // green
+			colors[i + 224] |= (224 + i) << 16; // blue
 		}
 }
 
 void Fire::Render()
 {
-	uint16_t temp;
+	float temp;
 
 	// draw random bottom line in fire array
 	int j = xw * (yw - 1);
 
-	for(int i = 0; i < xw - 1; i++)
+	for(int i = 0; i < xw ; i++)
 	{
 		int random = 1 + (int)(16.0 * (rand()/(RAND_MAX+1.0)));
 		if (random > 9) /* the lower the value, the intenser the fire, compensate a lower value with a higher decay value*/
@@ -75,9 +75,9 @@ void Fire::Render()
 	}
 
 	// move fire upwards, start at bottom
-	for (uint8_t index = 0; index < 60 ; ++index)
+	for (uint8_t index = 0; index < yw-1 ; ++index) // 60
 	{
-		for (int i = 0; i < xw - 1; ++i)
+		for (int i = 0; i < xw ; ++i)
 		{
 			if (i == 0) /* at the left border*/
 			{
@@ -99,7 +99,7 @@ void Fire::Render()
 				temp += fire[j + i + 1];
 				temp += fire[j + i - 1];
 				temp += fire[j - xw + i];
-				temp >>= 2;
+				temp /= 4.01;
 			}
 			if (temp > 1)
 				temp -= 1; /* decay */
@@ -113,11 +113,11 @@ void Fire::Render()
 
 	uint32_t *image = buffer + (xw * yw);
 
-	//for(int i=0; i<led_count; i++)
-		//buffer[i] = colors[fire[i]];
+	for(int i=0; i<led_count - xw; i++)
+		buffer[i + xw] = colors[fire[i]];
 
 
-	for (int i = yw - 3; i >= 0; --i)
+	/* for (int i = yw - 3; i >= 0; --i)
 	{
 		for (int j = xw - 1; j >= 0; --j)
 		{
@@ -125,4 +125,5 @@ void Fire::Render()
 			image--;
 		}
 	}
+	*/
 }

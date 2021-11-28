@@ -95,6 +95,8 @@ int main()
 	if(!pictureshow.LoadPNG("/home/thorsten/baum3.png"))
 		cout << "Picture not open." << endl;
 
+	quit = false;
+
     // main loop with event handling
     SDL_Event e;
     while (!quit)

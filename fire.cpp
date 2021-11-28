@@ -99,10 +99,10 @@ void Fire::Render()
 				temp += fire[j + i + 1];
 				temp += fire[j + i - 1];
 				temp += fire[j - xw + i];
-				temp /= 4.01;
+				temp /= 4.04;
 			}
 			if (temp > 1)
-				temp -= 1; /* decay */
+				temp -= 1.2; /* decay */
 
 			fire[j - xw + i] = temp;
 		}

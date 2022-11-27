@@ -8,7 +8,7 @@
 // Dieser Sourcecode ist Copyright geschützt!   //
 // Geistiges Eigentum von Th.Kattanek           //
 //                                              //
-// Letzte Änderung am 16.11.2021                //
+// Letzte Änderung am 27.11.2022                //
 //                                              //
 //                                              //
 //////////////////////////////////////////////////
@@ -23,6 +23,7 @@
 #include "./cometrain.h"
 #include "./pictureshow.h"
 #include "./fire.h"
+#include "./pixeltest.h"
 
 using namespace std;
 
@@ -33,8 +34,8 @@ static bool quit = false;
 #define WIDTH 25
 #define HEIGHT 30
 #define LED_COUNT WIDTH * HEIGHT
-#define EFFECT_TIME	10	// for 10sek
-#define FPS	50			// 50 Frame per second
+#define EFFECT_TIME	5		// for 5sek
+#define FPS	50				// 50 Frame per second
 
 #define RASTER_SIZE_XW 50
 #define RASTER_SIZE_YW 40
@@ -44,9 +45,9 @@ static bool quit = false;
 uint32_t buffer[LED_COUNT];
 uint32_t matrix[LED_COUNT];
 
-enum effects{FIRE, PLASMA, COMETRAIN, PICTURESHOW, EFFECT_COUNT};
+enum effects{FIRE, PLASMA, COMETRAIN, PICTURESHOW, PIXELTEST, EFFECT_COUNT};
 
-int current_effect = FIRE;
+int current_effect = PIXELTEST;
 int effect_time_counter = EFFECT_TIME * FPS;
 
 void buffer_clear();
@@ -91,6 +92,8 @@ int main()
 	cometrain.Init();
 
 	PictureShow pictureshow(WIDTH, HEIGHT, buffer);
+
+	PixelTest pixel_test(WIDTH, HEIGHT, buffer);
 
 	if(!pictureshow.LoadPNG("/home/thorsten/baum3.png"))
 		cout << "Picture not open." << endl;
@@ -137,6 +140,10 @@ int main()
 
 		case PICTURESHOW:
 			pictureshow.Render();
+			break;
+
+		case PIXELTEST:
+			pixel_test.Render();
 			break;
 		}
 

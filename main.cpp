@@ -47,7 +47,7 @@ uint32_t matrix[LED_COUNT];
 
 enum effects{FIRE, PLASMA, COMETRAIN, PICTURESHOW, PIXELTEST, EFFECT_COUNT};
 
-int current_effect = PIXELTEST;
+int current_effect = PLASMA;
 int effect_time_counter = EFFECT_TIME * FPS;
 
 void buffer_clear();

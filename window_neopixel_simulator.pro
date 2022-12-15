@@ -11,7 +11,8 @@ SOURCES += \
         main.cpp \
         pictureshow.cpp \
         pixeltest.cpp \
-        plasma.cpp
+	plasma.cpp \
+	game_of_life.cpp
 LIBS += -lSDL2 -lSDL2main -lSDL2_gfx -lpng
 
 HEADERS += \
@@ -19,4 +20,5 @@ HEADERS += \
 	fire.h \
 	pictureshow.h \
 	pixeltest.h \
-	plasma.h
+	plasma.h \
+	game_of_life.h

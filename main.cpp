@@ -24,6 +24,7 @@
 #include "./pictureshow.h"
 #include "./fire.h"
 #include "./pixeltest.h"
+#include "./game_of_life.h"
 
 using namespace std;
 
@@ -45,9 +46,9 @@ static bool quit = false;
 uint32_t buffer[LED_COUNT];
 uint32_t matrix[LED_COUNT];
 
-enum effects{FIRE, PLASMA, COMETRAIN, PICTURESHOW, PIXELTEST, EFFECT_COUNT};
+enum effects{FIRE, PLASMA, COMETRAIN, PICTURESHOW, GAMEOFLIFE, PIXELTEST, EFFECT_COUNT};
 
-int current_effect = PLASMA;
+int current_effect = GAMEOFLIFE;
 int effect_time_counter = EFFECT_TIME * FPS;
 
 void buffer_clear();
@@ -95,6 +96,8 @@ int main()
 
 	PixelTest pixel_test(WIDTH, HEIGHT, buffer);
 
+	GameOfLife game_of_life(WIDTH, HEIGHT, buffer);
+
 	if(!pictureshow.LoadPNG("/home/thorsten/baum3.png"))
 		cout << "Picture not open." << endl;
 
@@ -140,6 +143,10 @@ int main()
 
 		case PICTURESHOW:
 			pictureshow.Render();
+			break;
+
+		case GAMEOFLIFE:
+			game_of_life.Render();
 			break;
 
 		case PIXELTEST:

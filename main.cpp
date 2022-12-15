@@ -21,7 +21,6 @@
 
 #include "./plasma.h"
 #include "./cometrain.h"
-#include "./pictureshow.h"
 #include "./fire.h"
 #include "./pixeltest.h"
 #include "./game_of_life.h"
@@ -92,14 +91,10 @@ int main()
 	Cometrain cometrain(WIDTH, HEIGHT, buffer);
 	cometrain.Init();
 
-	PictureShow pictureshow(WIDTH, HEIGHT, buffer);
-
 	PixelTest pixel_test(WIDTH, HEIGHT, buffer);
 
 	GameOfLife game_of_life(WIDTH, HEIGHT, buffer);
-
-	if(!pictureshow.LoadPNG("/home/thorsten/baum3.png"))
-		cout << "Picture not open." << endl;
+	game_of_life.Init();
 
 	quit = false;
 
@@ -141,10 +136,6 @@ int main()
 			cometrain.Render();
 			break;
 
-		case PICTURESHOW:
-			pictureshow.Render();
-			break;
-
 		case GAMEOFLIFE:
 			game_of_life.Render();
 			break;
@@ -161,6 +152,29 @@ int main()
 			current_effect++;
 			if(current_effect == EFFECT_COUNT)
 				current_effect = FIRE;
+
+			switch(current_effect)
+			{
+			case PLASMA:
+				plasma.Init();
+				break;
+
+			case COMETRAIN:
+				cometrain.Init();
+				break;
+
+			case FIRE:
+				fire.Init();
+				break;
+
+			case GAMEOFLIFE:
+				game_of_life.Init();
+				break;
+
+			case PIXELTEST:
+				pixel_test.Init();
+				break;
+			}
 		}
 
 		buffer_to_matrix();

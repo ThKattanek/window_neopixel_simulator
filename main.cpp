@@ -17,13 +17,14 @@
 
 #include <iostream>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL2_gfxPrimitives.h>
+#include "SDL2_gfxPrimitives.h"
 
 #include "./plasma.h"
 #include "./cometrain.h"
-#include "./pictureshow.h"
+//#include "./pictureshow.h"
 #include "./fire.h"
 #include "./pixeltest.h"
+#include "./effect_kordesii.h"
 
 using namespace std;
 
@@ -45,9 +46,9 @@ static bool quit = false;
 uint32_t buffer[LED_COUNT];
 uint32_t matrix[LED_COUNT];
 
-enum effects{FIRE, PLASMA, COMETRAIN, PICTURESHOW, PIXELTEST, EFFECT_COUNT};
+enum effects{FIRE, PLASMA, COMETRAIN, PICTURESHOW, PIXELTEST, KORDESII_01, EFFECT_COUNT};
 
-int current_effect = PLASMA;
+int current_effect = KORDESII_01;
 int effect_time_counter = EFFECT_TIME * FPS;
 
 void buffer_clear();
@@ -91,12 +92,15 @@ int main()
 	Cometrain cometrain(WIDTH, HEIGHT, buffer);
 	cometrain.Init();
 
-	PictureShow pictureshow(WIDTH, HEIGHT, buffer);
+    // PictureShow pictureshow(WIDTH, HEIGHT, buffer);
 
 	PixelTest pixel_test(WIDTH, HEIGHT, buffer);
 
+    EffectKordesii01 effect_kordesii_01(WIDTH, HEIGHT, buffer);
+    /*
 	if(!pictureshow.LoadPNG("/home/thorsten/baum3.png"))
 		cout << "Picture not open." << endl;
+    */
 
 	quit = false;
 
@@ -139,12 +143,16 @@ int main()
 			break;
 
 		case PICTURESHOW:
-			pictureshow.Render();
+            // pictureshow.Render();
 			break;
 
 		case PIXELTEST:
 			pixel_test.Render();
 			break;
+
+        case KORDESII_01:
+            effect_kordesii_01.Render();
+            break;
 		}
 
 		effect_time_counter--;
@@ -161,7 +169,7 @@ int main()
 
 		//Update the screen
 		SDL_RenderPresent(ren);
-		SDL_Delay(1000/50);
+        SDL_Delay(1000/ 50 );
     }
 
     // Destroys all created objects
